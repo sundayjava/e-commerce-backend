@@ -1,8 +1,10 @@
 package com.ecom.backend.controller;
 
+import com.ecom.backend.dao.request.AddItemRequest;
 import com.ecom.backend.dao.response.ApiResponse;
 import com.ecom.backend.exception.CartItemException;
 import com.ecom.backend.exception.UserException;
+import com.ecom.backend.model.CartItem;
 import com.ecom.backend.model.User;
 import com.ecom.backend.service.CartItemService;
 import com.ecom.backend.service.UserService;
@@ -26,6 +28,18 @@ public class CartItemController {
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setMessage("Item Remove Success");
+        apiResponse.setStatus(true);
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{cartItemId}")
+    public ResponseEntity<ApiResponse> updateCartItem(@RequestHeader("Authorization") String jwt, @RequestBody CartItem cartItem, @PathVariable("cartItemId") Long cartItemId) throws UserException, CartItemException {
+        User user = userService.findUserProfileByJwt(jwt);
+        cartItemService.updateCartItem(user.getId(), cartItemId, cartItem);
+
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage("Item Updated Success");
         apiResponse.setStatus(true);
 
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
