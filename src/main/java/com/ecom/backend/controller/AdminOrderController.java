@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/admin/order")
+@RequestMapping("/api/admin/order")
 public class AdminOrderController {
     @Autowired
     private OrderService orderService;
@@ -55,13 +55,14 @@ public class AdminOrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @PutMapping("/{orderId}/delete")
+    @DeleteMapping("/{orderId}/delete")
     public ResponseEntity<ApiResponse> deleteOrderHandler(
             @PathVariable Long orderId,
             @RequestHeader("Authorization") String jwt) throws OrderException {
         orderService.deleteOrder(orderId);
         ApiResponse res = new ApiResponse();
         res.setMessage("Order deleted successfully");
+        res.setStatus(true);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
